@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,25 +10,24 @@ public class SpeechToAction : MonoBehaviour
 
     private KeywordRecognizer keywordRecognizer;
     private Dictionary<string, Action> keywordActions = new Dictionary<string, Action>();
+    [SerializeField] private string[] keywords;
 
-    public Animator animator;
-
-    public GameObject Image;
-
-    public AudioSource Sound;
-
-    public AudioClip Thunder;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start is called once before t q qhe first execution of Update after the MonoBehaviour is created
     void Start()
     {
         foreach (var device in Microphone.devices)
         {
-            Debug.Log("Name: "+ device);
+            Debug.Log("Name: " + device);
         }
 
-        keywordActions.Add("I cast Testicular Torsion", TesticularTorsion);
-        keywordActions.Add("I cast Mend Buttcrack", MendButtcrack);
+           
+        for (int i = 0; i < keywords.Length; i++)
+        {
+            string current = keywords[i];
+            Debug.Log("Keyword: " + current);
+
+            keywordActions.Add(current, () => ExecuteAction(current));
+        }
 
         keywordRecognizer = new KeywordRecognizer(keywordActions.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += OnKeywordsRecognized;
@@ -40,17 +40,23 @@ public class SpeechToAction : MonoBehaviour
         keywordActions[args.text].Invoke();
     }
 
-    void TesticularTorsion()
+    void ExecuteAction(string keywords)
     {
-        animator.SetTrigger("TesticularTorsion");
-        Image.SetActive(true);
-        Sound.PlayOneShot(Thunder);
-        Debug.Log("Se le torcieron las bolas");
-    }
 
-    void MendButtcrack()
-    {
-        Debug.Log("Le sanaron la raya del anuel");
-        animator.SetTrigger("MendButtcrack");
+        switch (keywords)
+        {
+            case "Fireball":
+                Debug.Log("Lanzando Bola de Fuego");
+                break;
+            case "Snowball":
+                Debug.Log("Lanzando Bola de Nieve");
+                break;
+            case "Slushball":
+                Debug.Log("Lanzando Bola de Aguanieve");
+                break;
+            default:
+                Debug.Log("Accion no reconocida");
+                break;
+        }   
     }
 }
