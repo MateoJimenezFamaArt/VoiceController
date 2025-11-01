@@ -12,6 +12,8 @@ public class SpeechToAction : MonoBehaviour
     private Dictionary<string, Action> keywordActions = new Dictionary<string, Action>();
     [SerializeField] private string[] keywords;
 
+    [SerializeField] private BallScript[] BallPrefabs;
+
     // Start is called once before t q qhe first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -42,11 +44,20 @@ public class SpeechToAction : MonoBehaviour
 
     void ExecuteAction(string keywords)
     {
+        for (int i = 0; i < BallPrefabs.Length; i++)
+        {
+            string current = BallPrefabs[i].ballType;
+
+            Debug.Log("Ball Chosen: " + current);
+
+            keywordActions.Add(current, () => ExecuteAction(current));
+        }
 
         switch (keywords)
         {
             case "Fireball":
-                Debug.Log("Lanzando Bola de Fuego");
+                Debug.Log("Shooting Fireball");
+                
                 break;
             case "Snowball":
                 Debug.Log("Lanzando Bola de Nieve");
